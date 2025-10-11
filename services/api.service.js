@@ -31,8 +31,8 @@ module.exports = {
 
                 aliases: {
                     // Auth routes
-                    "POST sign_up": "auth.sign_up",
-                    "POST log_in": "auth.log_in", 
+                    "POST sign_up": "auth.signup",
+                    "POST log_in": "auth.login", 
                     "POST verify": "auth.verify",
 
                     // Users routes

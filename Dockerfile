@@ -16,7 +16,10 @@ RUN npx prisma generate
 # Copiar resto del código
 COPY . .
 
+# Hacer el script ejecutable
+RUN chmod +x init-db.sh
+
 EXPOSE 3500
 
-# Solo sincronizar el schema, crear las tablas si no existen
-CMD ["sh", "-c", "npx prisma db push --force-reset --accept-data-loss && npm start"]
+# Usar el script de inicialización
+CMD ["./init-db.sh"]
