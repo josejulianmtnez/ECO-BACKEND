@@ -7,7 +7,7 @@ module.exports = {
     actions: {
         store_users: {
             rest: {
-                method: "GET",
+                method: "POST",
                 path: "/store_users",
             },
             async handler(ctx) {
