@@ -13,6 +13,7 @@ services:
       - "3502:3500"
     depends_on:
       - nats
+    command: ["sh", "-c", "echo 'Starting API service...' && npx prisma db push --force-reset --accept-data-loss && npx prisma generate && npm start"]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api-gw.rule=PathPrefix(`/`)"
@@ -28,6 +29,7 @@ services:
     depends_on:
       - api
       - nats
+    command: ["sh", "-c", "sleep 10 && echo 'Starting Greeter service...' && npx prisma generate && npm start"]
     networks:
       - internal
 
@@ -39,6 +41,7 @@ services:
     depends_on:
       - api
       - nats
+    command: ["sh", "-c", "sleep 15 && echo 'Starting Products service...' && npx prisma generate && npm start"]
     networks:
       - internal
 
@@ -50,6 +53,7 @@ services:
     depends_on:
       - api
       - nats
+    command: ["sh", "-c", "sleep 20 && echo 'Starting Users service...' && npx prisma generate && npm start"]
     networks:
       - internal
 
@@ -61,6 +65,7 @@ services:
     depends_on:
       - api
       - nats
+    command: ["sh", "-c", "sleep 25 && echo 'Starting Auth service...' && npx prisma generate && npm start"]
     networks:
       - internal
 
@@ -75,6 +80,7 @@ services:
     depends_on:
       - api
       - nats
+    command: ["sh", "-c", "sleep 30 && echo 'Starting Web service...' && npx prisma generate && npm start"]
     networks:
       - internal
 

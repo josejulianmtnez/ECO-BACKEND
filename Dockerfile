@@ -16,10 +16,7 @@ RUN npx prisma generate
 # Copiar resto del código
 COPY . .
 
-# Hacer el script ejecutable
-RUN chmod +x init-db.sh
-
 EXPOSE 3500
 
-# Usar el script de inicialización
-CMD ["./init-db.sh"]
+# Comando por defecto simple - se sobrescribe en docker-compose
+CMD ["npm", "start"]
