@@ -22,7 +22,7 @@ jobs:
             cd ${{ vars.PATH }}
             
             echo "compose down..."
-            docker-compose down
+            docker compose down
             
             echo "removing old images..."
             docker rmi eco-backend:latest -f 2>/dev/null || true
@@ -38,11 +38,11 @@ jobs:
             fi
             
             echo "compose up..."
-            docker-compose up --build -d
+            docker compose up --build -d
             
             echo "compose ps..."
-            docker-compose ps
+            docker compose ps
             
             echo "api logs"
-            docker-compose logs --tail=50 api
+            docker compose logs --tail=50 api
             
