@@ -1,0 +1,48 @@
+name: Deploy in VPS
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ vars.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASS }}
+          script: |
+            cd ${{ vars.PATH }}
+            
+            echo "compose down..."
+            docker-compose down
+            
+            echo "removing old images..."
+            docker rmi eco-backend:latest -f 2>/dev/null || true
+            
+            echo "pull origin main..."
+            git fetch origin
+            git reset --hard origin/main
+            git pull origin main
+            
+            if [ ! -f docker-compose.yml ]; then
+              echo "Error: docker-compose.yml not found"
+              exit 1
+            fi
+            
+            echo "compose up..."
+            docker-compose up --build -d
+            
+            echo "compose ps..."
+            docker-compose ps
+            
+            echo "api logs"
+            docker-compose logs --tail=50 api
+            
