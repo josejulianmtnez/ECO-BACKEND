@@ -9,7 +9,6 @@ module.exports = {
 	mixins: [ApiGateway],
 
 	settings: {
-		port: process.env.WEB_PORT,
 		timeout: 720000,
 		routes: [
 			{
