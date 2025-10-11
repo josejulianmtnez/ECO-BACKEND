@@ -19,8 +19,8 @@ module.exports = {
 				},
 				aliases: {
 					/* ──────────── Auth ──────────── */
-                    "POST sign_up/": "auth.sign_up",
-                    "POST log_in/": "auth.log_in",
+                    "POST signup/": "auth.signup",
+                    "POST login/": "auth.login",
                     "POST verify/": "auth.verify",
 				},
 				mappingPolicy: "all",
