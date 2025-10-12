@@ -30,7 +30,7 @@ module.exports = {
         get_by_id: {
             rest: {
                 method: "GET",
-                path: "/get_by_id/",
+                path: "/get_by_id",
             },
             params: {
                 id: { type: "number", convert: true },
