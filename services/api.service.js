@@ -29,19 +29,6 @@ module.exports = {
                 authorization: false,
                 autoAliases: true,
 
-                aliases: {
-                    // Auth routes
-                    "POST sign_up": "auth.signup",
-                    "POST log_in": "auth.login", 
-                    "POST verify": "auth.verify",
-
-                    // Users routes
-                    "GET users": "users.get_users",
-                    "GET users/:id": "users.get_by_id",
-                    "GET users/email/:email": "users.get_by_email",
-                    "POST users": "users.store_users",
-                },
-
                 callOptions: {},
 
                 bodyParsers: {
@@ -69,6 +56,22 @@ module.exports = {
                 // Add headers to context
                 onBeforeCall(ctx, route, req, res) {
                     ctx.meta.headers = req.headers;
+                    ctx.meta.startTime = process.hrtime.bigint();
+                },
+
+                // Log response time
+                onAfterCall(ctx, route, req, res, data) {
+                    if (ctx.meta.startTime) {
+                        const endTime = process.hrtime.bigint();
+                        const duration = Number(endTime - ctx.meta.startTime) / 1000000; // ms
+                        
+                        // Agregar header de latencia
+                        res.setHeader('X-Response-Time', `${duration.toFixed(2)}ms`);
+                        
+                        // Log para debugging
+                        this.logger.info(`${req.method} ${req.url} - ${duration.toFixed(2)}ms`);
+                    }
+                    return data;
                 }
             }
         ],
@@ -106,5 +109,29 @@ module.exports = {
                 throw new ApiGateway.Errors.UnAuthorizedError("NO_RIGHTS");
             }
         }
+    },
+    actions: {
+        ping: {
+            rest: {
+                method: "GET",
+                path: "/ping",
+            },
+            params: {},
+            async handler(ctx) {
+                const startTime = Date.now()
+                
+                await new Promise(resolve => setTimeout(resolve, 1))
+                
+                const endTime = Date.now()
+                const latency = endTime - startTime
+                
+                return {
+                    message: "pong",
+                    latency: `${latency}ms`,
+                    timestamp: new Date().toISOString(),
+                    server: process.env.HOSTNAME || "localhost"
+                }
+            }
+        },
     }
 };
