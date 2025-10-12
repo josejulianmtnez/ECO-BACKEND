@@ -10,6 +10,13 @@ module.exports = {
                 method: "POST",
                 path: "/store_users",
             },
+            params: {
+                name: { type: "string" },
+                email: { type: "string" },
+                role: { type: "string" },
+                linked_child: { type: "string" },
+                password_hash: { type: "string" },
+            },
             async handler(ctx) {
                 try {
                     const { name, email, role, linked_child, password_hash } = ctx.params;
@@ -24,6 +31,9 @@ module.exports = {
             rest: {
                 method: "GET",
                 path: "/get_by_id",
+            },
+            params: {
+                id: { type: "number" },
             },
             async handler(ctx) {
                 try {
@@ -40,6 +50,9 @@ module.exports = {
                 method: "GET",
                 path: "/get_by_email",
             },
+            params: {
+                email: { type: "string" },
+            },
             async handler(ctx) {
                 try {
                     const { email } = ctx.params;
@@ -55,6 +68,7 @@ module.exports = {
                 method: "GET",
                 path: "/get_users",
             },
+            params: {},
             async handler() {
                 try {
                     return await prisma.users.findMany();
