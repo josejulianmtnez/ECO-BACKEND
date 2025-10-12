@@ -65,9 +65,8 @@ typings/
 
 /generated/prisma
 
-# docker
-data/
+# Docker
+/.github
+/test
+.gitignore
 *.md
-docker-compose.yml
-docker-compose.env
-.dockerignore

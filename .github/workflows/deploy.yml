@@ -3,9 +3,10 @@ name: Deploy in VPS
 on:
   workflow_dispatch:
 
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Push Docker Image"]
+    types:
+      - completed
 
 jobs:
   build:
@@ -19,30 +20,13 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           password: ${{ secrets.VPS_PASS }}
           script: |
-            cd ${{ vars.PATH }}
-            
-            echo "compose down..."
-            docker compose down
-            
-            echo "removing old images..."
-            docker rmi eco-backend:latest -f 2>/dev/null || true
-            
-            echo "pull origin main..."
-            git fetch origin
-            git reset --hard origin/main
-            git pull origin main
-            
-            if [ ! -f docker-compose.yml ]; then
-              echo "Error: docker-compose.yml not found"
-              exit 1
-            fi
-            
-            echo "compose up..."
-            docker compose up --build -d
-            
-            echo "compose ps..."
-            docker compose ps
-            
-            echo "api logs"
-            docker compose logs --tail=50 api
-            
+            docker login -u ${{ vars.DOCKER_USER }} -p ${{ secrets.DOCKER_TOKEN }}
+            docker rmi -f ${{ vars.DOCKER_USER }}/${{ vars.DOCKER_IMAGE }}:latest || true
+            docker pull ${{ vars.DOCKER_USER }}/${{ vars.DOCKER_IMAGE }}:latest
+            docker stop ${{ vars.DOCKER_CONTAINER }} || true
+            docker rm ${{ vars.DOCKER_CONTAINER }} || true
+
+            docker run -d --name '${{ vars.DOCKER_CONTAINER }}' \
+              -e 'DATABASE_URL=${{ secrets.DATABASE_URL }}' \
+              -p '3500:3500' \
+              '${{ vars.DOCKER_USER }}/${{ vars.DOCKER_IMAGE }}:latest'
