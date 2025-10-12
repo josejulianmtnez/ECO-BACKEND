@@ -29,6 +29,26 @@ module.exports = {
                 authorization: false,
                 autoAliases: true,
 
+                aliases: {
+                    // Auth routes
+                    "POST sign_up": "auth.sign_up",
+                    "POST log_in": "auth.log_in", 
+                    "POST verify": "auth.verify",
+
+                    // Users routes
+                    "GET users": "users.get_users",
+                    "GET users/:id": "users.get_by_id",
+                    "GET users/email/:email": "users.get_by_email",
+                    "POST users": "users.store_users",
+
+                    // Devices routes
+                    "GET devices": "devices.get_devices",
+                    "GET devices/get_by_id": "devices.get_by_id",
+                    "GET devices/get_by_mac": "devices.get_by_mac",
+                    "POST devices": "devices.store_devices",
+                    "DELETE devices/:id": "devices.destroy_device",
+                },
+
                 callOptions: {},
 
                 bodyParsers: {

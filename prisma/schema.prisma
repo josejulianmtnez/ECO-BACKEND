@@ -21,4 +21,18 @@ model users {
   linked_child  String?
   password_hash String
   created_at    DateTime @default(now())
+  devices       devices[]
+}
+
+model devices {
+  id            Int      @id @default(autoincrement())
+  mac           String   @unique 
+  type          String
+  model         String
+  os_version    String
+  last_sync     DateTime?
+  created_at    DateTime @default(now())
+
+  user_id       Int
+  user          users    @relation(fields: [user_id], references: [id])
 }
