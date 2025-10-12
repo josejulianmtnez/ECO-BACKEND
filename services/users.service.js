@@ -30,18 +30,15 @@ module.exports = {
         get_by_id: {
             rest: {
                 method: "GET",
-                path: "/:id",
+                path: "/get_by_id/",
             },
             params: {
-                id: "number"
-            },
-            params: {
-                id: { type: "number" },
+                id: { type: "number", convert: true },
             },
             async handler(ctx) {
                 try {
                     const { id } = ctx.params;
-                    return await prisma.users.findUnique({ where: { id: parseInt(id) } });
+                    return await prisma.users.findUnique({ where: { id } });
                 } catch (error) {
                     this.logger.error("Error en get_by_id:", error.message);
                     throw new Error(`Error al obtener usuario por id: ${error.message}`);
@@ -51,10 +48,7 @@ module.exports = {
         get_by_email: {
             rest: {
                 method: "GET",
-                path: "/email/:email",
-            },
-            params: {
-                email: "string"
+                path: "/get_by_email/",
             },
             params: {
                 email: { type: "string" },
