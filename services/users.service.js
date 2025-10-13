@@ -48,7 +48,7 @@ module.exports = {
         get_by_email: {
             rest: {
                 method: "GET",
-                path: "/get_by_email/",
+                path: "/get_by_email",
             },
             params: {
                 email: { type: "string" },
