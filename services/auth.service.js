@@ -12,8 +12,8 @@ module.exports = {
             params: {
                 name: { type: "string" },
                 email: { type: "string" },
-                role: { type: "string" },
-                linked_child: { type: "string" },
+                role: { type: "string", optional: true },
+                linked_child: { type: "string", optional: true },
                 password: { type: "string" },
             },
             async handler(ctx) {
