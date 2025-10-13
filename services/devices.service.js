@@ -10,6 +10,14 @@ module.exports = {
                 method: "POST",
                 path: "/store_devices",
             },
+            params: {
+                mac: { type: "string" },
+                type: { type: "string" },
+                model: { type: "string" },
+                os_version: { type: "string" },
+                last_sync: { type: "date", convert: true, optional: true },
+                user_id: { type: "number", convert: true },
+            },
             async handler(ctx) {
                 try {
                     const { mac, type, model, os_version, last_sync, user_id } = ctx.params;
@@ -48,6 +56,9 @@ module.exports = {
                 method: "GET",
                 path: "/get_by_id",
             },
+            params: {
+                id: { type: "number", convert: true },
+            },
             async handler(ctx) {
                 try {
                     const id = Number(ctx.params.id) || Number(ctx.query.id);
@@ -75,6 +86,9 @@ module.exports = {
             rest: {
                 method: "GET",
                 path: "/get_by_mac",
+            },
+            params: {
+                mac: { type: "string" },
             },
             async handler(ctx) {
                 try {

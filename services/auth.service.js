@@ -9,6 +9,13 @@ module.exports = {
                 method: "POST",
                 path: "/signup",
             },
+            params: {
+                name: { type: "string" },
+                email: { type: "string" },
+                role: { type: "string", optional: true },
+                linked_child: { type: "string", optional: true },
+                password: { type: "string" },
+            },
             async handler(ctx) {
                 try {
                     const { name, email, role, linked_child, password } = ctx.params;
@@ -32,6 +39,10 @@ module.exports = {
                 method: "POST",
                 path: "/login",
             },
+            params: {
+                email: { type: "string" },
+                password: { type: "string" },
+            },
             async handler(ctx) {
                 try {
                     const { email, password } = ctx.params;
@@ -54,6 +65,9 @@ module.exports = {
             rest: {
                 method: "POST",
                 path: "/verify",
+            },
+            params: {
+                token: { type: "string" },
             },
             async handler(ctx) {
                 try {
