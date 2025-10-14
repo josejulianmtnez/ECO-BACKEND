@@ -21,7 +21,10 @@ model users {
   linked_child  String?
   password_hash String
   created_at    DateTime @default(now())
+  
   devices       devices[]
+  tutor_alerts  alerts[] @relation("tutor_alerts")
+  child_alerts  alerts[] @relation("child_alerts")
 }
 
 model devices {
@@ -35,4 +38,18 @@ model devices {
 
   user_id       Int
   user          users    @relation(fields: [user_id], references: [id])
+}
+
+model alerts {
+  id            Int       @id @default(autoincrement())
+  
+  id_user_tutor Int
+  tutor         users     @relation("tutor_alerts", fields:[id_user_tutor], references:[id])
+  id_user_child Int
+  child         users     @relation("child_alerts", fields:[id_user_child], references:[id])
+
+  timestamp     DateTime  @default(now())
+  type          String
+  message       String
+  status        Boolean   @default(true)
 }
