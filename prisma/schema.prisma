@@ -16,15 +16,21 @@ generator client {
 model users {
   id            Int      @id @default(autoincrement())
   name          String
-  email         String   @unique
+  email         String?   @unique
   role          String?
-  linked_child  String?
-  password_hash String
+  password_hash String?
   created_at    DateTime @default(now())
-  
+
   devices       devices[]
+
+  generated_codes link_codes[] @relation("TutorLinkCode")
+  used_codes      link_codes[] @relation("ChildLinkCode")
+
   tutor_alerts  alerts[] @relation("tutor_alerts")
   child_alerts  alerts[] @relation("child_alerts")
+
+  tutor_links   tutor_child_links[] @relation("TutorToChild")
+  child_links   tutor_child_links[] @relation("ChildToTutor")
 }
 
 model devices {
@@ -52,4 +58,29 @@ model alerts {
   type          String
   message       String
   status        Boolean   @default(true)
+}
+
+model link_codes {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique
+  tutor_id    Int
+  used        Boolean  @default(false)
+  expires_at  DateTime
+  created_at  DateTime @default(now())
+
+  tutor     users    @relation("TutorLinkCode", fields: [tutor_id], references: [id])
+
+  child_id  Int?
+  child     users?   @relation("ChildLinkCode", fields: [child_id], references: [id])
+}
+
+
+model tutor_child_links {
+  id         Int      @id @default(autoincrement())
+  tutor_id   Int
+  child_id   Int
+  created_at DateTime @default(now())
+
+  tutor users @relation("TutorToChild", fields: [tutor_id], references: [id])
+  child users @relation("ChildToTutor", fields: [child_id], references: [id])
 }

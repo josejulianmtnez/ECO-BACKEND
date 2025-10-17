@@ -11,20 +11,19 @@ module.exports = {
             },
             params: {
                 name: { type: "string" },
-                email: { type: "string" },
+                email: { type: "string", optional: true},
                 role: { type: "string", optional: true },
-                linked_child: { type: "string", optional: true },
-                password: { type: "string" },
+                password: { type: "string", optional: true },
             },
             async handler(ctx) {
                 try {
-                    const { name, email, role, linked_child, password } = ctx.params;
+                    const { name, email, role, password } = ctx.params;
 
                     const exists = await ctx.call("users.get_by_email", { email });
                     if (exists) throw new Error("El usuario ya existe");
 
                     const password_hash = await bcrypt.hash(password, 10);
-                    const user = await ctx.call("users.store_users", { name, email, role, linked_child, password_hash });
+                    const user = await ctx.call("users.store_users", { name, email, role, password_hash });
 
                     const token = jwt.sign({ id: user.id, email: user.email }, "secretKey", { expiresIn: '7d' });
                     return { user, token };

@@ -12,15 +12,14 @@ module.exports = {
             },
             params: {
                 name: { type: "string" },
-                email: { type: "string" },
+                email: { type: "string", optional: true },
                 role: { type: "string", optional: true },
-                linked_child: { type: "string", optional: true },
                 password_hash: { type: "string" },
             },
             async handler(ctx) {
                 try {
-                    const { name, email, role, linked_child, password_hash } = ctx.params;
-                    return await prisma.users.create({ data: { name, email, role, linked_child, password_hash } });
+                    const { name, email, role, password_hash } = ctx.params;
+                    return await prisma.users.create({ data: { name, email, role, password_hash } });
                 } catch (error) {
                     this.logger.error("Error en store_users:", error.message);
                     throw new Error(`Error al almacenar usuarios: ${error.message}`);
