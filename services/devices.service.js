@@ -29,27 +29,27 @@ module.exports = {
             },
         },
         destroy_device: {
-            async handler(ctx) {
-                try {
-                    const id = Number(ctx.params.id);
-
-                    if (isNaN(id)) {
-                        throw new Error("El id debe ser un número válido");
-                    }
-
-                    const deletedDevice = await prisma.devices.delete({
-                        where: { id },
-                    });
-
-                    return {
-                        message: `Dispositivo con id ${id} eliminado correctamente`,
-                        device: deletedDevice,
-                    };
-                } catch (error) {
-                    this.logger.error("Error en destroy_device:", error.message);
-                    throw new Error(`Error al eliminar dispositivo: ${error.message}`);
-                }
+            rest: {
+                method: "POST",
+                path: "/destroy_device",
             },
+            params: {
+                id: { type: "number", convert: true },
+                confirm: { type: "boolean", optional: true, default: false }
+            },
+            async handler(ctx) {
+                if (!ctx.params.confirm) {
+                    return { message: "Por favor, confirme la eliminación estableciendo 'confirm' a true." }
+                }
+                try {
+                    return await prisma.devices.delete({
+                        where: { id: ctx.params.id }
+                    })
+                } catch (err) {
+                    this.logger.error("Error en delete:", err.message)
+                    throw new Error(`Error al eliminar la alerta: ${err.message}`)
+                }
+            }
         },
         get_by_id: {
             rest: {
