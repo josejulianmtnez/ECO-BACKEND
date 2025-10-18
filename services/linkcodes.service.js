@@ -51,11 +51,27 @@ module.exports = {
                 path: "/verify",
             },
             params: {
-                code: { type: "string" },
+                code: { type: "string", length: 6 },
+                device_info: {
+                    type: "object",
+                    props: {
+                        uuid: { type: "string", optional: false },
+                        name: { type: "string", optional: false },
+                        model: { type: "string", optional: false },
+                        os_version: { type: "string", optional: false },
+                    }
+                },
             },
             async handler(ctx) {
                 try {
-                    const { code } = ctx.params;
+                    const { code, device_info } = ctx.params;
+
+                    console.info("Código recibido:", code);
+                    console.info("Device info recibido:", device_info);
+
+                    if (!code || code.length !== 6) {
+                        throw new Error("El código debe tener 6 caracteres");
+                    }
 
                     const link = await prisma.link_codes.findUnique({
                         include: { 
@@ -91,6 +107,17 @@ module.exports = {
                             child_id: child.id,
                         },
                     });
+
+                    this.logger.info("Registrando dispositivo:", { device_info, user_id: child.id });
+                    await ctx.call("devices.store_devices", {
+                            uuid: device_info.uuid,
+                            name: device_info.name,
+                            model: device_info.model,
+                            os_version: device_info.os_version,
+                            last_sync: new Date(),
+                            user_id: child.id
+                    });
+ 
                     await prisma.link_codes.update({
                         where: { id: link.id },
                         data: {
@@ -100,7 +127,7 @@ module.exports = {
                     });
 
                     return { 
-                        message: "Código verificado y vínculo creado exitosamente",
+                        message: "Código verificado, vinculado y dispositivo registrado exitosamente",
                         tutor_id: link.tutor_id,
                         child_id: child.id,
                     };

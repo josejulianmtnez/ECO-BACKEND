@@ -17,7 +17,8 @@ module.exports = {
             },
             async handler(ctx) {
                 try {
-                    const { name, email, role, password } = ctx.params;
+                    const { name, email, password } = ctx.params;
+                    const role = "tutor";
 
                     const exists = await ctx.call("users.get_by_email", { email });
                     if (exists) throw new Error("El usuario ya existe");

@@ -11,8 +11,8 @@ module.exports = {
                 path: "/store_devices",
             },
             params: {
-                mac: { type: "string" },
-                type: { type: "string" },
+                uuid: { type: "string" },
+                name: { type: "string" },
                 model: { type: "string" },
                 os_version: { type: "string" },
                 last_sync: { type: "date", convert: true, optional: true },
@@ -20,8 +20,8 @@ module.exports = {
             },
             async handler(ctx) {
                 try {
-                    const { mac, type, model, os_version, last_sync, user_id } = ctx.params;
-                    return await prisma.devices.create({ data: { mac, type, model, os_version, last_sync, user_id } });
+                    const { uuid, name, model, os_version, last_sync, user_id } = ctx.params;
+                    return await prisma.devices.create({ data: { uuid, name, model, os_version, last_sync, user_id } });
                 } catch (error) {
                     this.logger.error("Error en store_devices:", error.message);
                     throw new Error(`Error al almacenar dispositivos: ${error.message}`);
@@ -88,15 +88,15 @@ module.exports = {
                 path: "/get_by_mac",
             },
             params: {
-                mac: { type: "string" },
+                uuid: { type: "string" },
             },
             async handler(ctx) {
                 try {
-                    const { mac } = ctx.params;
-                    return await prisma.devices.findUnique({ where: { mac } });
+                    const { uuid } = ctx.params;
+                    return await prisma.devices.findUnique({ where: { uuid } });
                 } catch (error) {
                     this.logger.error("Error en get_by_mac:", error.message);
-                    throw new Error(`Error al obtener dispositivo por mac: ${error.message}`);
+                    throw new Error(`Error al obtener dispositivo por uuid: ${error.message}`);
                 }
             },
         },

@@ -17,7 +17,7 @@ model users {
   id            Int      @id @default(autoincrement())
   name          String
   email         String?   @unique
-  role          String?
+  role          String
   password_hash String?
   created_at    DateTime @default(now())
 
@@ -35,8 +35,8 @@ model users {
 
 model devices {
   id            Int      @id @default(autoincrement())
-  mac           String   @unique 
-  type          String
+  uuid           String   @unique
+  name          String
   model         String
   os_version    String
   last_sync     DateTime?
