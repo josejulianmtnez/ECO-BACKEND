@@ -40,13 +40,6 @@ module.exports = {
                     "GET users/:id": "users.get_by_id",
                     "GET users/email/:email": "users.get_by_email",
                     "POST users": "users.store_users",
-
-                    // Devices routes
-                    "GET devices": "devices.get_devices",
-                    "GET devices/get_by_id": "devices.get_by_id",
-                    "GET devices/get_by_mac": "devices.get_by_mac",
-                    "POST devices": "devices.store_devices",
-                    "DELETE devices/:id": "devices.destroy_device",
                 },
 
                 callOptions: {},
