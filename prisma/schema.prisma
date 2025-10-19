@@ -34,6 +34,8 @@ model users {
 
   tutor_rules   rules[] @relation("RulesFromTutor")
   child_rules   rules[] @relation("RulesForChild")
+
+  child_activities  activities[] @relation("ChildActivities")
 }
 
 model devices {
@@ -99,4 +101,17 @@ model rules {
 
   tutor users @relation("RulesFromTutor", fields: [tutor_id], references: [id])
   child users @relation("RulesForChild", fields: [child_id], references: [id])
+}
+
+model activities {
+  id                  Int      @id @default(autoincrement())
+  child_id            Int
+  uuid                String   @unique
+  app_name            String
+  start_time          DateTime?
+  close_time          DateTime?
+  duration            Int?
+  created_at          DateTime @default(now())
+
+  child users @relation("ChildActivities", fields: [child_id], references: [id])
 }
