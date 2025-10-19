@@ -30,6 +30,7 @@ module.exports = {
                     };
 
                     const activity = await prisma.activities.create({ data });
+                    return activity;
 
                 } catch (error) {
                     this.logger.error("Error en start_activity:", error.message);
@@ -99,9 +100,6 @@ module.exports = {
             async handler(ctx) {
                 try {
                     const id = ctx.params.id;
-                    if (isNaN(id)) {
-                        throw new Error("El id debe ser un número válido");
-                    }
                     const activity = await prisma.activities.findUnique({
                         where: { id },
                     });
