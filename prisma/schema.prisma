@@ -92,7 +92,7 @@ model rules {
   id                  Int      @id @default(autoincrement())
   tutor_id            Int
   child_id            Int
-  bloqued_app         String
+  blocked_app         String
   screen_time_limit   Int
   active    Boolean   @default(false)
   created_at DateTime @default(now())

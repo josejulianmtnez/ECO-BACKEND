@@ -1,9 +1,11 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const ListMixin = require('../mixins/list.mixin')
 
 
 module.exports = {
     name: "rules",
+    mixins: [ListMixin],
     actions: {
         store_rules: {
             rest: {
@@ -13,14 +15,14 @@ module.exports = {
             params: {
                 tutor_id: { type: "number", convert: true },
                 child_id: { type: "number", convert: true },
-                bloqued_app: { type: "string" },
+                blocked_app: { type: "string" },
                 screen_time_limit: { type: "number", convert: true },
                 active: { type: "boolean", default: false },
             },
             async handler(ctx) {
                 try {
-                    const { tutor_id, child_id, bloqued_app, screen_time_limit, active} = ctx.params;
-                    return await prisma.rules.create({ data: { tutor_id, child_id, bloqued_app, screen_time_limit, active } });
+                    const { tutor_id, child_id, blocked_app, screen_time_limit, active} = ctx.params;
+                    return await prisma.rules.create({ data: { tutor_id, child_id, blocked_app, screen_time_limit, active } });
                 } catch (error) {
                     this.logger.error("Error en store_rules:", error.message);
                     throw new Error(`Error al almacenar regla: ${error.message}`);
@@ -34,12 +36,8 @@ module.exports = {
             },
             params: {
                 id: { type: "number", convert: true },
-                confirm: { type: "boolean", optional: true, default: false }
             },
             async handler(ctx) {
-                if (!ctx.params.confirm) {
-                    return { message: "Por favor, confirme la eliminación estableciendo 'confirm' a true." }
-                }
                 try {
                     return await prisma.rules.delete({
                         where: { id: ctx.params.id }
@@ -60,7 +58,7 @@ module.exports = {
             },
             async handler(ctx) {
                 try {
-                    const id = Number(ctx.params.id) || Number(ctx.query.id);
+                    const id = ctx.params.id;
                     if (isNaN(id)) {
                         throw new Error("El id debe ser un número válido");
                     }
@@ -98,7 +96,7 @@ module.exports = {
             },
             params: {
                 id: { type: "number", convert: true },
-                bloqued_app: { type: "string", optional: true },
+                blocked_app: { type: "string", optional: true },
                 screen_time_limit: { type: "number", convert: true, optional: true },
                 active: { type: "boolean", optional: true },
             },
