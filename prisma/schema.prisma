@@ -31,6 +31,9 @@ model users {
 
   tutor_links   tutor_child_links[] @relation("TutorToChild")
   child_links   tutor_child_links[] @relation("ChildToTutor")
+
+  tutor_rules   rules[] @relation("RulesFromTutor")
+  child_rules   rules[] @relation("RulesForChild")
 }
 
 model devices {
@@ -83,4 +86,17 @@ model tutor_child_links {
 
   tutor users @relation("TutorToChild", fields: [tutor_id], references: [id])
   child users @relation("ChildToTutor", fields: [child_id], references: [id])
+}
+
+model rules {
+  id                  Int      @id @default(autoincrement())
+  tutor_id            Int
+  child_id            Int
+  bloqued_app         String
+  screen_time_limit   Int
+  active    Boolean   @default(false)
+  created_at DateTime @default(now())
+
+  tutor users @relation("RulesFromTutor", fields: [tutor_id], references: [id])
+  child users @relation("RulesForChild", fields: [child_id], references: [id])
 }
