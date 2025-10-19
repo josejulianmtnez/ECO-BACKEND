@@ -9,4 +9,4 @@ EXPOSE 3500
 RUN npm i
 RUN npx prisma generate
 
-CMD [ "sh", "-c", "npx prisma db push && npm start" ]
+CMD [ "sh", "-c", "npx prisma db push --force-reset && npm start" ]
