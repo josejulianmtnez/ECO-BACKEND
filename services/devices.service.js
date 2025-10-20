@@ -146,7 +146,7 @@ module.exports = {
 
                 } catch (error) {
                     this.logger.error("Error en get_devices_by_tutor:", error.message);
-                    throw new Error(`Error al obtener dispositivos por tutor: ${error.message}`);
+                    throw new Error(`Error al obtener dispositivos por tutor: ${error.message}`, { cause: error });
                 }
             },
         },
