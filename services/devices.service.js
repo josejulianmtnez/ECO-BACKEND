@@ -82,10 +82,10 @@ module.exports = {
                 }
             },
         },
-        get_by_mac: {
+        get_by_uuid: {
             rest: {
                 method: "GET",
-                path: "/get_by_mac",
+                path: "/get_by_uuid",
             },
             params: {
                 uuid: { type: "string" },
@@ -111,6 +111,42 @@ module.exports = {
                 } catch (error) {
                     this.logger.error("Error en get_devices:", error.message);
                     throw new Error(`Error al obtener dispositivos: ${error.message}`);
+                }
+            },
+        },
+        get_devices_by_tutor: {
+            rest: {
+                method: "GET",
+                path: "/get_devices_by_tutor",
+            },
+            params: {
+                tutor_id: { type: "number", convert: true },
+            },
+            async handler(ctx) {
+                try {
+                    const { tutor_id } = ctx.params;
+                    const childLinks = await prisma.tutor_child_links.findMany({
+                        where: { tutor_id },
+                        select: { child_id: true },
+                    });
+
+                    if (childLinks.length === 0) {
+                        return [];
+                    }
+
+                    const childIds = childLinks.map(link => link.child_id);
+
+                    const devices = await prisma.devices.findMany({
+                        where: {
+                            user_id: { in: childIds },
+                        },
+                    });
+
+                    return devices;
+
+                } catch (error) {
+                    this.logger.error("Error en get_devices_by_tutor:", error.message);
+                    throw new Error(`Error al obtener dispositivos por tutor: ${error.message}`);
                 }
             },
         },
