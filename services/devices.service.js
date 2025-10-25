@@ -140,6 +140,13 @@ module.exports = {
                         where: {
                             user_id: { in: childIds },
                         },
+                        include: {
+                            user: {
+                                select: {
+                                    name: true,
+                                },
+                            },
+                        },
                     });
 
                     return devices;
