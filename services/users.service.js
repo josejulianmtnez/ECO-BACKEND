@@ -77,5 +77,38 @@ module.exports = {
                 }
             },
         },
+        update_user: {
+			rest: {
+				method: "POST",
+				path: "/update_user",
+			},
+			params: {
+				id: { type: "number", convert: true },
+				name: { type: "string", optional: true },
+				email: { type: "string", optional: true },
+				role: { type: "string", optional: true },
+			},
+			async handler(ctx) {
+				try {
+					const { id, ...data } = ctx.params;
+
+					// Filtrar solo los campos que tienen valores
+					const updateData = {};
+					if (data.name !== undefined) updateData.name = data.name;
+					if (data.email !== undefined) updateData.email = data.email;
+					if (data.role !== undefined) updateData.role = data.role;
+
+					return await prisma.users.update({
+						where: { id },
+						data: updateData,
+					});
+				} catch (error) {
+					this.logger.error("Error en update_user:", error.message);
+					throw new Error(
+						`Error al actualizar usuario: ${error.message}`
+					);
+				}
+			},
+		},
     },
 };
