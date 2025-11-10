@@ -113,6 +113,33 @@ module.exports = {
                 }
             },
         },
+        get_by_child_id: {
+            rest: {
+                method: "GET",
+                path: "/get_by_child_id",
+            },
+            params: {
+                child_id: { type: "number", convert: true },
+            },
+            async handler(ctx) {
+                try {
+                const child_id = ctx.params.child_id;
+                const activities = await prisma.activities.findMany({
+                    where: { child_id },
+                    orderBy: { start_time: 'asc' },
+                });
+                
+                if (!activities || activities.length === 0) {
+                    return { message: `No se encontraron actividades para el child_id ${child_id}` };
+                }
+                
+                return activities;
+                } catch (error) {
+                this.logger.error("Error en get_by_child_id:", error.message);
+                throw new Error(`Error al obtener actividades por child_id: ${error.message}`);
+                }
+            },
+            },
         get_by_uuid: {
             rest: {
                 method: "GET",
