@@ -89,6 +89,25 @@ module.exports = {
                 }
             },
         },
+        get_by_tutor_id: {
+            rest: {
+                method: "GET",
+                path: "/get_rules_by_tutor_id",
+            },
+            params: {
+                tutor_id: { type: "number", convert: true },
+            },
+            async handler(ctx) {
+                try {
+                    return await prisma.rules.findMany({
+                        where: { tutor_id: ctx.params.tutor_id }
+                    });
+                } catch (error) {
+                    this.logger.error("Error en get_rules_by_tutor_id:", error.message);
+                    throw new Error(`Error al obtener las reglas: ${error.message}`);
+                }
+            },
+        },
         update_rule: {
             rest: {
                 method: "POST",
