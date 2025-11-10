@@ -219,6 +219,34 @@ module.exports = {
 				}
 			},
 		},
+		update_status: {
+			rest: {
+				method: "POST",
+				path: "/update_status",
+			},
+			params: {
+				id: { type: "number", convert: true },
+				status: { type: "boolean", optional: true },
+			},
+			async handler(ctx) {
+				const data = {};
+
+				ctx.params.status !== undefined &&
+					(data.status = ctx.params.status);
+
+				try {
+					return await prisma.alerts.update({
+						where: { id: ctx.params.id },
+						data,
+					});
+				} catch (err) {
+					this.logger.error("Error en update status:", err.message);
+					throw new Error(
+						`Error al actualizar el status de la alerta: ${err.message}`
+					);
+				}
+			},
+		},
 		delete: {
 			rest: {
 				method: "DELETE",
