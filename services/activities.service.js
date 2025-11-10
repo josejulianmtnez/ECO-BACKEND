@@ -139,7 +139,7 @@ module.exports = {
                 throw new Error(`Error al obtener actividades por child_id: ${error.message}`);
                 }
             },
-            },
+        },
         get_by_uuid: {
             rest: {
                 method: "GET",
